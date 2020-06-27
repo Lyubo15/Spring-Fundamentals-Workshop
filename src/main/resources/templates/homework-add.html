@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Judge v2</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+<div class="container">
+    <div class="row rounded">
+        <div class="col-12">
+
+            <th:block th:insert="header.html"/>
+
+        </div>
+    </div>
+    <!-- row -->
+    <div class="row tm-mt-big justify-content-center">
+        <div class="col-xl-8 col-lg-10 col-md-12 col-sm-12 ">
+            <div class="bg-white tm-block">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="tm-block-title d-inline-block">Add your homework</h2>
+                    </div>
+                </div>
+                <div class="row mt-4 tm-edit-product-row ">
+                    <div class="col-xl-7 col-lg-7 col-md-12">
+                        <form th:action="@{/add-homework}" th:method="POST" th:object="${homework}"
+                              class="tm-edit-product-form">
+
+                            <div class="input-group mb-3">
+                                <label for="exercise" class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">Exercises</label>
+                                <select class="custom-select col-xl-9 col-lg-8 col-md-8 col-sm-7" id="exercise"
+                                        name="exercise" required>
+
+                                    <option selected value="Select exercise">Select exercise</option>
+                                    <option th:each="exerice : ${exercises}"
+                                            th:value="${exerice.getName()}"
+                                            th:text="${exerice.getName()}"
+                                            th:filed="*{exercise}">
+                                    </option>
+
+                                </select>
+
+                                <th:block th:each="error : ${#fields.errors('exercise')}">
+                                    <div class="input-group mb-3 justify-content-center">
+                                        <small class="text-danger" th:text="${error}"/>
+                                    </div>
+                                </th:block>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label for="gitAddress" class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">
+                                    Github address
+                                </label>
+                                <input id="gitAddress" name="gitAddress" type="text"
+                                       class="form-control validate col-xl-9 col-lg-8 col-md-8 col-sm-7"
+                                       th:fiels="*{gitAddress}"
+                                       th:value="*{gitAddress}" required>
+                            </div>
+
+                            <th:block th:each="error : ${#fields.errors('gitAddress')}">
+                                <div class="input-group mb-3 justify-content-center">
+                                    <small class="text-danger" th:text="${error}"/>
+                                </div>
+                            </th:block>
+
+                            <small th:if="${homeworkExcise}" class="text-danger">You already do this homework</small>
+
+
+                            <div class="input-group mb-3">
+                                <div class="ml-auto col-xl-8 col-lg-8 col-md-8 col-sm-7 pl-0">
+                                    <button type="submit" class="btn btn-primary">Add
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-12 mx-auto mb-4">
+                        <img src="/img/homework.png" alt="Homework picture" width="100%">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<th:block th:insert="footer.html"/>
+
+
+</body>
+
+</html>

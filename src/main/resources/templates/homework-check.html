@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Judge v2</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <th:block th:insert="header.html"/>
+        </div>
+    </div>
+    <!-- row -->
+    <div class="row tm-content-row tm-mt-big">
+        <div class="tm-col tm-col-big">
+            <div class="bg-white tm-block ">
+                <div class="row text-center justify-content-center">
+                    <div class="col-12">
+                        <h2 class="tm-block-title d-inline-block">Rules for scoring!</h2>
+                    </div>
+                </div>
+                <ol class="tm-list-group tm-list-group-alternate-color tm-list-group-pad-big">
+                    <li class="tm-list-group-item">
+                        Download the archived file
+                    </li>
+                    <li class="tm-list-group-item">
+                        Import the Project
+                    </li>
+                    <li class="tm-list-group-item">
+                        Add custom/additional data if needed
+                    </li>
+                    <li class="tm-list-group-item">
+                        Change the credentials in application properties
+                    </li>
+                    <li class="tm-list-group-item">
+                        Test all exercises and verify the results
+                    </li>
+                    <li class="tm-list-group-item">
+                        Write detailed comment for homework
+                    </li>
+                    <li class="tm-list-group-item">
+                        Don't be mean with scoring :) !!!!
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="tm-col tm-col-big text-center justify-content-center">
+            <div class="bg-white tm-block">
+                <div class="row">
+                    <div th:if="${homework.getId() == 0}" class="col-12">
+                        <h2 class="tm-block-title">There aren't homework</h2>
+                    </div>
+                    <div th:if="${homework.getId() != 0 && homework.isChecked() == false}" class="col-12">
+                        <h2 class="tm-block-title"
+                            th:text="| Add Comments for ${homework.getAuthor().getUsername()}s homework about ${homework.getExercise().getName()} |">
+                            Add Comments for Homework</h2>
+                    </div>
+                    <div th:if="${homework.getId() != 0 && homework.isChecked() == true}" class="col-12">
+                        <h2 class="tm-block-title"
+                            th:text="| Homework on ${homework.getAuthor().getUsername()} about ${homework.getExercise().getName()} |">Add
+                            Comments for Homework</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+
+                        <form th:action="@{/comment}" th:method="post" th:object="${comment}" class="tm-signup-form">
+
+                            <th:block th:if="${homework.isChecked() == false  && homework.getId() != 0}">
+
+                                <div class="form-group">
+                                    <label for="score">Score</label>
+                                    <br/>
+                                    <select required class="custom-select col-xl-9 col-lg-8 col-md-8 col-sm-7"
+                                            name="score"
+                                            id="score" th:filed="*{score}">
+                                        <option value="1" selected>Enter your score</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                    </select>
+                                </div>
+
+                                <th:block th:each="error : ${#fields.errors('score')}">
+                                    <small class="text-danger" th:text="${error}"/>
+                                </th:block>
+
+                                <div class="form-group">
+                                    <label for="textContent">Description</label>
+                                    <br/>
+                                    <textarea id="textContent" name="textContent" class="form-control validate"
+                                              rows="3" placeholder="Enter your comment" th:fields="*{textContent}"
+                                    ></textarea>
+
+                                    <th:block th:each="error : ${#fields.errors('textContent')}">
+                                        <small class="text-danger" th:text="${error}"/>
+                                    </th:block>
+
+                                </div>
+
+                                <input type="hidden" name="homeworkId" id="homeworkId">
+
+                                <div class="row">
+                                    <div class="col-12 col-sm-8 tm-btn-right">
+                                        <button type="submit" class="btn btn-danger">Add Comment</button>
+                                    </div>
+                                </div>
+
+                            </th:block>
+
+
+                            <th:block th:if="${homework.isChecked() == true && homework.getId() != 0}">
+
+                                <img src="https://us.123rf.com/450wm/imilian/imilian1505/imilian150500020/40649131-checkbox-checked-homework-on-black-chalkboard.jpg?ver=6">
+
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 ">
+                                        <h4>This homework is checked</h4>
+                                    </div>
+                                    <div th:method="post" class="col-12 col-sm-8 tm-btn-right">
+                                        <a th:href="@{'/delete/' + ${homework.getId()}}"
+                                           class="btn btn-danger">Delete It
+                                        </a>
+                                    </div>
+                                </div>
+                            </th:block>
+
+                            <th:block th:if="${homework.getId() == 0}">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIWRy2xamBvmsQ1dGWd3j2CA2Pm7JVZl-kPwlWn42aNZ2rpF&usqp=CAU">
+                            </th:block>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tm-col tm-col-small justify-content-center text-center">
+            <div class="bg-white tm-block">
+                <h2 class="tm-block-title">Download homework</h2>
+                <img src="/img/homework.png" alt="Homework pic" width="100%">
+                <div class="custom-file mt-3 mb-3">
+                    <input id="fileInput" type="file" style="display:none;"/>
+                    <th:block th:if="${homework.getId() != 0}">
+                        <a th:href="@{${homework.getGitAddress()}}">
+                            <input type="button" class="btn btn-primary d-block mx-xl-auto" value="Download homework"/>
+                        </a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="footer.html"/>
+</div>
+</body>
+</html>
